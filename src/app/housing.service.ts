@@ -5,19 +5,23 @@ import { HousingLocation } from './housing-location';
   providedIn: 'root',
 })
 export class HousingService {
-  url = `https://sethmilchick.github.io/housing-data/locations.json`;
+  url = 'https://sethmilchick.github.io/housing-data/locations.json';
+
   constructor() {}
 
   async getAllHousingLocations(): Promise<HousingLocation[]> {
-    const data = await fetch(this.url);
-    return (await data.json()) ?? [];
+    const response = await fetch(this.url);
+    const data = await response.json();
+    return data.locations ?? [];
   }
 
   async getHousingLocationById(
-    id: Number,
+    id: number,
   ): Promise<HousingLocation | undefined> {
-    const data = await fetch(`${this.url}/${id}`);
-    return (await data.json()) ?? {};
+    const response = await fetch(this.url);
+    const data = await response.json();
+    const locations: HousingLocation[] = data.locations ?? [];
+    return locations.find((location) => location.id === id);
   }
 
   async submitApplication(firstName: string, lastName: string, email: string) {
